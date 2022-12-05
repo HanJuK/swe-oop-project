@@ -49,7 +49,7 @@ public:
 		return;
 	}
 
-	void extendSeat()
+	void extendSeat(int minutes)
 	{
 		if (seatNo == -1)
 		{
