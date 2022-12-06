@@ -79,6 +79,16 @@ public:
 		return;
 	}
 
+	std::string getId()
+	{
+		return this->id;
+	}
+
+	std::string getPw()
+	{
+		return this->pw;
+	}
+
 	~User()
 	{
 		std::cout << "User " << this->name << " (" << this->phone << ") deleted!\n";
