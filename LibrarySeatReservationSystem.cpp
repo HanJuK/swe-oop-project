@@ -19,6 +19,8 @@ void deleteAllObjectsBeforeExit();
 
 void initializeWithSampleData()
 {
+	// TODO: set default seat reservation time
+
 	// initialize seats
 	for (int i = 1; i <= 100; ++i)
 	{
@@ -34,6 +36,8 @@ void initializeWithSampleData()
 	users.push_back(new User("id3", "pw3", "Kim", "01033333333"));
 	users.push_back(new User("id4", "pw4", "Choi", "01044444444"));
 	users.push_back(new User("id5", "pw5", "Jang", "01055555555"));
+
+	// TODO: sample seat reservation for users
 
 	return;
 }
@@ -197,10 +201,11 @@ int main()
 
 	while (true)
 	{
-		// pre - sign in
+		// reset sign in (pre - sign in)
 		User *currentUser = nullptr;
 		Admin *currentAdmin = nullptr;
 
+		// main menu
 		if (runMainMenu(&currentUser, &currentAdmin) == false)
 		{
 			break;
