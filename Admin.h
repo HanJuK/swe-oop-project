@@ -43,14 +43,14 @@ public:
 		return;
 	}
 
-	void addSeat(int seatNo)
+	void addSeat()
 	{
 		// TODO: logic
 
 		return;
 	}
 
-	void removeSeat(int seatNo)
+	void removeSeat()
 	{
 		// TODO: logic
 

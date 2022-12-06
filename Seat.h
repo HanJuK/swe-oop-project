@@ -45,6 +45,21 @@ public:
 		return;
 	}
 
+	int getSeatNo()
+	{
+		return this->seatNo;
+	}
+
+	std::string getCurrentSeatUserPhone()
+	{
+		return this->currentSeatUserPhone;
+	}
+
+	int getTimeRemainingInMinutes()
+	{
+		return this->timeRemainingInMinutes;
+	}
+
 	~Seat()
 	{
 		std::cout << "Seat " << this->seatNo << " deleted!\n";
