@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Seat.h"
+
 #include <string>
 #include <iostream>
 
@@ -47,15 +49,17 @@ public:
 		return;
 	}
 
-	void extendSeat(int minutes)
+	void extendSeat(Seat *currentSeat, int minutes)
 	{
-		if (seatNo == -1)
+		if (this->seatNo == -1)
 		{
 			std::cout << "No seat reserved for this user!\n";
 		}
 		else
 		{
-			// TODO: logic
+			currentSeat->extendSeatTimeRemaining(minutes);
+			
+			std::cout << "Seat time has been extended by " << minutes << " minutes.\n";
 		}
 
 		return;

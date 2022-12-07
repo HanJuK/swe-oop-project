@@ -19,7 +19,6 @@ User *createAccount();
 bool runUserMenu(User *currentUser);
 void showUserInfo(User *currentUser);
 void reserveSeat(User *currentUser, int seatNo);
-void extendSeat(User *currentUser);
 Seat *getSeatBySeatNo(int seatNo);
 void showSeatStatus();
 User *getUserByPhone(std::string phone);
@@ -226,7 +225,7 @@ bool runUserMenu(User *currentUser)
 	// extend seat
 	else if (selection == 3)
 	{
-		extendSeat(currentUser);
+		currentUser->extendSeat(getSeatBySeatNo(currentUser->getSeatNo()), DEF_RES_TIME);
 	}
 
 	return true;
@@ -489,22 +488,6 @@ void reserveSeat(User *currentUser, int seatNo)
 
 	getSeatBySeatNo(currentUser->getSeatNo())->setCurrentSeatUser(currentUser->getPhone());
 	getSeatBySeatNo(currentUser->getSeatNo())->extendSeatTimeRemaining(1 + DEF_RES_TIME);
-
-	return;
-}
-
-void extendSeat(User *currentUser)
-{
-	if (currentUser->getSeatNo() == -1)
-	{
-		std::cout << "No seat reserved for this user!\n";
-
-		return;
-	}
-
-	getSeatBySeatNo(currentUser->getSeatNo())->extendSeatTimeRemaining(DEF_RES_TIME);
-
-	std::cout << "Seat time has been extended by " << DEF_RES_TIME << " minutes.\n";
 
 	return;
 }
