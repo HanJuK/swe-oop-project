@@ -61,6 +61,11 @@ public:
 		return this->timeRemainingInMinutes;
 	}
 
+	bool getIsTemporaryUnavailable()
+	{
+		return this->isTemporaryUnavailable;
+	}
+
 	~Seat()
 	{
 		std::cout << "Seat " << this->seatNo << " deleted!\n";

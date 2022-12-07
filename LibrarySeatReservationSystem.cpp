@@ -194,16 +194,18 @@ bool runUserMenu(User *currentUser)
 	std::cout << "2. Reserve seat\n";
 	std::cout << "3. Extend seat\n";
 	std::cout << "4. Cancel seat\n";
+	std::cout << "5. Sign out\n";
+	std::cout << "6. Delete account\n";
 
 	int selection;
 	std::cout << ">> ";
 	std::cin >> selection;
 
-	if (!(1 <= selection && selection <= 4))
+	if (!(1 <= selection && selection <= 6))
 	{
 		system("cls");
 
-		std::cout << "Selection must be between 1 and 4!\n\n";
+		std::cout << "Selection must be between 1 and 6!\n\n";
 
 		return true;
 	}
@@ -230,6 +232,37 @@ bool runUserMenu(User *currentUser)
 	else if (selection == 4)
 	{
 		cancelSeat(currentUser);
+	}
+
+	// sign out
+	else if (selection == 5)
+	{
+		return false;
+	}
+
+	// delete account
+	else if (selection == 6)
+	{
+		if (currentUser->getSeatNo() != -1)
+		{
+			std::cout << "Please cancel your seat first.\n";
+		}
+		else
+		{
+			for (int i = 0; i < users.size(); ++i)
+			{
+				if (users[i] == currentUser)
+				{
+					users.erase(users.begin() + i);
+
+					break;
+				}
+			}
+
+			delete currentUser;
+
+			return false;
+		}
 	}
 
 	return true;
@@ -287,9 +320,19 @@ void showSeatStatus()
 		// seat no.
 		for (int j = 0; j < 10; ++j)
 		{
-			std::cout << "¦¢ "
-				<< addPaddingToLengthEleven(std::to_string(seats[i * 10 + j]->getSeatNo()))
-				<< " ¦¢";
+			if (seats[i * 10 + j]->getIsTemporaryUnavailable() == true)
+			{
+				std::cout << "¦¢ "
+					<< addPaddingToLengthEleven(std::to_string(seats[i * 10 + j]->getSeatNo())
+												+ " (unavailable)")
+					<< " ¦¢";
+			}
+			else
+			{
+				std::cout << "¦¢ "
+					<< addPaddingToLengthEleven(std::to_string(seats[i * 10 + j]->getSeatNo()))
+					<< " ¦¢";
+			}
 		}
 
 		std::cout << "\n";
@@ -368,9 +411,19 @@ void showSeatStatus()
 		// seat no.
 		for (int j = 0; j < seats.size() % 10; ++j)
 		{
-			std::cout << "¦¢ "
-				<< addPaddingToLengthEleven(std::to_string(seats[(seats.size() / 10) * 10 + j]->getSeatNo()))
-				<< " ¦¢";
+			if (seats[(seats.size() / 10) * 10 + j]->getIsTemporaryUnavailable() == true)
+			{
+				std::cout << "¦¢ "
+					<< addPaddingToLengthEleven(std::to_string(seats[(seats.size() / 10) * 10 + j]->getSeatNo())
+												+ " (unavailable)")
+					<< " ¦¢";
+			}
+			else
+			{
+				std::cout << "¦¢ "
+					<< addPaddingToLengthEleven(std::to_string(seats[(seats.size() / 10) * 10 + j]->getSeatNo()))
+					<< " ¦¢";
+			}
 		}
 
 		std::cout << "\n";
@@ -485,6 +538,13 @@ void reserveSeat(User *currentUser, int seatNo)
 	{
 		std::cout << "No such seat!\n";
 		
+		return; // TODO: loop
+	}
+
+	if (getSeatBySeatNo(seatNo)->getIsTemporaryUnavailable() == true)
+	{
+		std::cout << "This seat is temporary unavailable!\n";
+
 		return; // TODO: loop
 	}
 
