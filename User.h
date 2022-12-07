@@ -99,6 +99,16 @@ public:
 		return this->phone;
 	}
 
+	int getSeatNo()
+	{
+		return this->seatNo;
+	}
+
+	bool getIsBlocked()
+	{
+		return this->isBlocked;
+	}
+
 	~User()
 	{
 		std::cout << "User " << this->name << " (" << this->phone << ") deleted!\n";

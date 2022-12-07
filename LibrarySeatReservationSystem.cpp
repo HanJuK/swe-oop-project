@@ -14,9 +14,12 @@ bool runMainMenu(User **currentUser, Admin **currentAdmin);
 User *signIn();
 Admin *signInAsAdmin();
 User *createAccount();
-bool runUserMenu();
+bool runUserMenu(User *currentUser);
+void showUserInfo(User *currentUser);
+Seat *getSeatBySeatNo(int seatNo);
 void showSeatStatus();
 User *getUserByPhone(std::string phone);
+void updateUserInfo(User *currentUser);
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
@@ -72,6 +75,8 @@ bool runMainMenu(User **currentUser, Admin **currentAdmin)
 		system("cls");
 
 		std::cout << "Selection must be between 1 and 4!\n\n";
+
+		return true;
 	}
 
 	// sign in
@@ -181,13 +186,72 @@ User *createAccount()
 	return users[users.size() - 1];
 }
 
-bool runUserMenu()
+bool runUserMenu(User *currentUser)
 {
+	showUserInfo(currentUser);
+
 	showSeatStatus();
 
-	// TODO:
+	std::cout << "Select an option.\n";
+	std::cout << "1. Update user info\n";
+	std::cout << "2. \n";
+	std::cout << "3. \n";
+	std::cout << "4. \n";
+
+	int selection;
+	std::cout << ">> ";
+	std::cin >> selection;
+
+	if (!(1 <= selection && selection <= 4))
+	{
+		system("cls");
+
+		std::cout << "Selection must be between 1 and 4!\n\n";
+	}
+
+	if (selection == 1)
+	{
+		updateUserInfo(currentUser);
+	}
 
 	return true;
+}
+
+void showUserInfo(User *currentUser)
+{
+	Seat *currentSeat = nullptr;
+
+	currentSeat = getSeatBySeatNo(currentUser->getSeatNo());
+
+	std::cout << "ID: " << currentUser->getId() << "\n";
+	std::cout << "Password: " << currentUser->getPw() << "\n";
+	std::cout << "Name: " << currentUser->getName() << "\n";
+	std::cout << "Phone: " << currentUser->getPhone() << "\n";
+	if (currentSeat == nullptr)
+	{
+		std::cout << "Seat No.: " << "null\n";
+	}
+	else // TODO: test this
+	{
+		std::cout << "Seat No.: " << currentUser->getSeatNo()
+			<< " (" << currentSeat->getTimeRemainingInMinutes() << ")\n";
+	}
+	std::cout << "Is Blocked?: " << currentUser->getIsBlocked() << "\n";
+
+	return;
+}
+
+Seat *getSeatBySeatNo(int seatNo)
+{
+	for (int i = 0; i < seats.size(); ++i)
+	{
+		if (seats[i]->getSeatNo() == seatNo)
+		{
+			return seats[i];
+		}
+	}
+	
+	return nullptr;
 }
 
 void showSeatStatus()
@@ -360,6 +424,24 @@ void showSeatStatus()
 	return;
 }
 
+void updateUserInfo(User *currentUser)
+{
+	std::string id, pw, name, phone;
+
+	std::cout << "ID: ";
+	std::cin >> id;
+	std::cout << "Password: ";
+	std::cin >> pw;
+	std::cout << "Name: ";
+	std::cin >> name;
+	std::cout << "Phone: ";
+	std::cin >> phone;
+
+	currentUser->updateUserInfo(id, pw, name, phone);
+
+	return;
+}
+
 User *getUserByPhone(std::string phone)
 {
 	for (int i = 0; i < users.size(); ++i)
@@ -448,7 +530,7 @@ int main()
 		else if (currentUser != nullptr && currentAdmin == nullptr)
 		{
 			std::cout << "User sign in!\n"; // TODO: remove
-			runUserMenu();
+			runUserMenu(currentUser);
 		}
 		
 		// admin sign in
