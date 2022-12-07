@@ -1,7 +1,10 @@
 #pragma once
 
+#include "User.h"
+
 #include <string>
 #include <iostream>
+#include <vector>
 
 class Admin
 {
@@ -28,10 +31,13 @@ public:
 
 		return;
 	}
-
-	void viewAllUserInfo()
+	//void showUserInfo(User *currentUser)
+	void viewAllUserInfo(std::vector<User *> *users, void (*showUserInfo)(User *user))
 	{
-		// TODO: logic
+		for (int i = 0; i < (*users).size(); ++i)
+		{
+			showUserInfo((*users)[i]);
+		}
 
 		return;
 	}

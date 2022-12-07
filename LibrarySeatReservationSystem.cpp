@@ -27,7 +27,6 @@ void cancelSeat(User *currentUser);
 bool runAdminMenu(Admin *currentAdmin);
 void showAdminInfo(Admin *currentAdmin);
 void updateAdminInfo(Admin *currentAdmin);
-void showAllUserInfo();
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
@@ -585,7 +584,7 @@ bool runAdminMenu(Admin *currentAdmin)
 	std::cout << "Select an option.\n";
 	std::cout << "1. Update admin info\n";
 	std::cout << "2. View all user info\n";
-	std::cout << "3. \n";
+	std::cout << "3. Block user\n";
 	std::cout << "4. \n";
 	std::cout << "5. \n";
 	std::cout << "6. \n";
@@ -612,7 +611,12 @@ bool runAdminMenu(Admin *currentAdmin)
 	// view all user info
 	else if (selection == 2)
 	{
-		showAllUserInfo();
+		currentAdmin->viewAllUserInfo(&users, showUserInfo);
+	}
+
+	else if (selection == 3)
+	{
+
 	}
 
 	return true;
@@ -642,16 +646,6 @@ void updateAdminInfo(Admin *currentAdmin)
 	std::cin >> phone;
 
 	currentAdmin->updateAdminInfo(id, pw, name, phone);
-
-	return;
-}
-
-void showAllUserInfo()
-{
-	for (int i = 0; i < users.size(); ++i)
-	{
-		showUserInfo(users[i]);
-	}
 
 	return;
 }
