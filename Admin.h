@@ -1,6 +1,7 @@
 #pragma once
 
 #include "User.h"
+#include "Seat.h"
 
 #include <string>
 #include <iostream>
@@ -31,7 +32,7 @@ public:
 
 		return;
 	}
-	//void showUserInfo(User *currentUser)
+
 	void viewAllUserInfo(std::vector<User *> *users, void (*showUserInfo)(User *user))
 	{
 		for (int i = 0; i < (*users).size(); ++i)
@@ -42,9 +43,48 @@ public:
 		return;
 	}
 
-	void blockUser(std::string phone)
+	void blockUser(std::string phone, User *(*getUserByPhone)(std::string phone),
+				   Seat *(*getSeatBySeatNo)(int seatNo))
 	{
-		// TODO: logic
+		User *userToBlock = nullptr;
+
+		userToBlock = getUserByPhone(phone);
+
+		if (userToBlock == nullptr)
+		{
+			std::cout << "No such user!\n";
+		}
+		else
+		{
+			// first, cancel their seat
+			if (userToBlock->getSeatNo() != -1)
+			{
+				getSeatBySeatNo(userToBlock->getSeatNo())->clearCurrentSeatUser();
+
+				userToBlock->cancelSeat();
+			}
+
+			// then, block them
+			userToBlock->setIsBlocked(true);
+		}
+
+		return;
+	}
+
+	void unblockUser(std::string phone, User *(*getUserByPhone)(std::string phone))
+	{
+		User *userToUnblock = nullptr;
+
+		userToUnblock = getUserByPhone(phone);
+
+		if (userToUnblock == nullptr)
+		{
+			std::cout << "No such user!\n";
+		}
+		else
+		{
+			userToUnblock->setIsBlocked(false);
+		}
 
 		return;
 	}

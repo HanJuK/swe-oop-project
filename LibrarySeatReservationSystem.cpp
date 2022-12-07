@@ -27,6 +27,8 @@ void cancelSeat(User *currentUser);
 bool runAdminMenu(Admin *currentAdmin);
 void showAdminInfo(Admin *currentAdmin);
 void updateAdminInfo(Admin *currentAdmin);
+void blockUser(Admin *currentAdmin);
+void unblockUser(Admin *currentAdmin);
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
@@ -91,6 +93,14 @@ bool runMainMenu(User **currentUser, Admin **currentAdmin)
 			system("cls");
 
 			std::cout << "Sign in failed!\n\n";
+		}
+		else if ((*currentUser)->getIsBlocked() == true)
+		{
+			*currentUser = nullptr;
+
+			system("cls");
+
+			std::cout << "This account has been blocked!\n\n";
 		}
 	}
 
@@ -585,7 +595,7 @@ bool runAdminMenu(Admin *currentAdmin)
 	std::cout << "1. Update admin info\n";
 	std::cout << "2. View all user info\n";
 	std::cout << "3. Block user\n";
-	std::cout << "4. \n";
+	std::cout << "4. Unblock user\n";
 	std::cout << "5. \n";
 	std::cout << "6. \n";
 
@@ -614,9 +624,16 @@ bool runAdminMenu(Admin *currentAdmin)
 		currentAdmin->viewAllUserInfo(&users, showUserInfo);
 	}
 
+	// block user
 	else if (selection == 3)
 	{
+		blockUser(currentAdmin);
+	}
 
+	// unblock user
+	else if (selection == 4)
+	{
+		unblockUser(currentAdmin);
 	}
 
 	return true;
@@ -646,6 +663,30 @@ void updateAdminInfo(Admin *currentAdmin)
 	std::cin >> phone;
 
 	currentAdmin->updateAdminInfo(id, pw, name, phone);
+
+	return;
+}
+
+void blockUser(Admin *currentAdmin)
+{
+	std::string phone;
+
+	std::cout << "Phone number of user to block: ";
+	std::cin >> phone;
+
+	currentAdmin->blockUser(phone, getUserByPhone, getSeatBySeatNo);
+
+	return;
+}
+
+void unblockUser(Admin *currentAdmin)
+{
+	std::string phone;
+
+	std::cout << "Phone number of user to unblock: ";
+	std::cin >> phone;
+
+	currentAdmin->unblockUser(phone, getUserByPhone);
 
 	return;
 }

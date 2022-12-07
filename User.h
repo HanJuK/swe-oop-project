@@ -79,6 +79,13 @@ public:
 		return;
 	}
 
+	void setIsBlocked(bool isBlocked)
+	{
+		this->isBlocked = isBlocked;
+
+		return;
+	}
+
 	std::string getId()
 	{
 		return this->id;
