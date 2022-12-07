@@ -128,9 +128,9 @@ public:
 		return;
 	}
 
-	void changeDefaultReservationTime(int minutes)
+	void changeDefaultReservationTime(int *DEF_RES_TIME, int minutes)
 	{
-		// TODO: logic
+		*DEF_RES_TIME = minutes;
 
 		return;
 	}

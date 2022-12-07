@@ -31,6 +31,7 @@ void blockUser(Admin *currentAdmin);
 void unblockUser(Admin *currentAdmin);
 void makeSeatTemporarilyUnavailable(Admin *currentAdmin);
 void makeSeatAvailable(Admin *currentAdmin);
+void changeDefaultReservationTime(Admin *currentAdmin);
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
@@ -609,16 +610,17 @@ bool runAdminMenu(Admin *currentAdmin)
 	std::cout << "6. Remove seat\n";
 	std::cout << "7. Make seat temporarily unavailable\n";
 	std::cout << "8. Make seat available\n";
+	std::cout << "9. Change default reservation time\n";
 
 	int selection;
 	std::cout << ">> ";
 	std::cin >> selection;
 
-	if (!(1 <= selection && selection <= 8))
+	if (!(1 <= selection && selection <= 9))
 	{
 		system("cls");
 
-		std::cout << "Selection must be between 1 and 8!\n\n";
+		std::cout << "Selection must be between 1 and 9!\n\n";
 
 		return true;
 	}
@@ -669,6 +671,12 @@ bool runAdminMenu(Admin *currentAdmin)
 	else if (selection == 8)
 	{
 		makeSeatAvailable(currentAdmin);
+	}
+
+	// change default reservation time
+	else if (selection == 9)
+	{
+		changeDefaultReservationTime(currentAdmin);
 	}
 
 	return true;
@@ -764,6 +772,18 @@ void makeSeatAvailable(Admin *currentAdmin)
 	{
 		currentAdmin->makeSeatAvailable(getSeatBySeatNo(seatNo));
 	}
+
+	return;
+}
+
+void changeDefaultReservationTime(Admin *currentAdmin)
+{
+	int minutes;
+
+	std::cout << "Enter new default reservation time in minutes: ";
+	std::cin >> minutes;
+
+	currentAdmin->changeDefaultReservationTime(&DEF_RES_TIME, minutes);
 
 	return;
 }
