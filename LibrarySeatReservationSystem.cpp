@@ -611,16 +611,18 @@ bool runAdminMenu(Admin *currentAdmin)
 	std::cout << "7. Make seat temporarily unavailable\n";
 	std::cout << "8. Make seat available\n";
 	std::cout << "9. Change default reservation time\n";
+	std::cout << "10. Sign out\n";
+	std::cout << "11. Delete account\n";
 
 	int selection;
 	std::cout << ">> ";
 	std::cin >> selection;
 
-	if (!(1 <= selection && selection <= 9))
+	if (!(1 <= selection && selection <= 11))
 	{
 		system("cls");
 
-		std::cout << "Selection must be between 1 and 9!\n\n";
+		std::cout << "Selection must be between 1 and 11!\n\n";
 
 		return true;
 	}
@@ -677,6 +679,30 @@ bool runAdminMenu(Admin *currentAdmin)
 	else if (selection == 9)
 	{
 		changeDefaultReservationTime(currentAdmin);
+	}
+
+	// sign out
+	else if (selection == 10)
+	{
+		return false;
+	}
+
+	// delete account
+	else if (selection == 11)
+	{
+		for (int i = 0; i < admins.size(); ++i)
+		{
+			if (admins[i] == currentAdmin)
+			{
+				admins.erase(admins.begin() + i);
+
+				break;
+			}
+		}
+
+		delete currentAdmin;
+
+		return false;
 	}
 
 	return true;
