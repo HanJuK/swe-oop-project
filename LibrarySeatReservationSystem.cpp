@@ -128,7 +128,7 @@ bool runMainMenu(User **currentUser, Admin **currentAdmin)
 	}
 
 	// exit
-	else
+	else if (selection == 4)
 	{
 		return false;
 	}
@@ -561,6 +561,13 @@ void reserveSeat(User *currentUser, int seatNo)
 		return; // TODO: loop
 	}
 
+	if (getSeatBySeatNo(seatNo)->getTimeRemainingInMinutes() != -1)
+	{
+		std::cout << "This seat is already taken!\n";
+
+		return; // TODO: loop
+	}
+
 	currentUser->reserveSeat(seatNo);
 
 	getSeatBySeatNo(currentUser->getSeatNo())->setCurrentSeatUser(currentUser->getPhone());
@@ -596,7 +603,7 @@ bool runAdminMenu(Admin *currentAdmin)
 	std::cout << "2. View all user info\n";
 	std::cout << "3. Block user\n";
 	std::cout << "4. Unblock user\n";
-	std::cout << "5. \n";
+	std::cout << "5. Add seat\n";
 	std::cout << "6. \n";
 
 	int selection;
@@ -634,6 +641,18 @@ bool runAdminMenu(Admin *currentAdmin)
 	else if (selection == 4)
 	{
 		unblockUser(currentAdmin);
+	}
+
+	// add seat
+	else if (selection == 5)
+	{
+		currentAdmin->addSeat(&seats);
+	}
+
+	// remove seat
+	else if (selection == 6)
+	{
+		currentAdmin->removeSeat(&seats);
 	}
 
 	return true;

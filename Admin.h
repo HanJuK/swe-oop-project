@@ -89,16 +89,27 @@ public:
 		return;
 	}
 
-	void addSeat()
+	void addSeat(std::vector<Seat *> *seats)
 	{
-		// TODO: logic
+		(*seats).push_back(new Seat((*seats).size() + 1));
 
 		return;
 	}
 
-	void removeSeat()
+	void removeSeat(std::vector<Seat *> *seats)
 	{
-		// TODO: logic
+		if ((*((*seats).end() - 1))->getTimeRemainingInMinutes() != -1)
+		{
+			std::cout << "Cannot remove seat! (currently occupied)\n";
+		}
+		else
+		{
+			Seat *temp = *((*seats).end() - 1);
+
+			(*seats).pop_back();
+
+			delete temp;
+		}
 
 		return;
 	}
