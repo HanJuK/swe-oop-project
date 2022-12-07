@@ -81,6 +81,16 @@ public:
 		return this->pw;
 	}
 
+	std::string getName()
+	{
+		return this->name;
+	}
+
+	std::string getPhone()
+	{
+		return this->phone;
+	}
+
 	~Admin()
 	{
 		std::cout << "Admin " << this->name << " (" << this->phone << ") deleted!\n";

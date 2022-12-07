@@ -24,6 +24,10 @@ User *getUserByPhone(std::string phone);
 void updateUserInfo(User *currentUser);
 void reserveSeat(User *currentUser, int seatNo);
 void cancelSeat(User *currentUser);
+bool runAdminMenu(Admin *currentAdmin);
+void showAdminInfo(Admin *currentAdmin);
+void updateAdminInfo(Admin *currentAdmin);
+void showAllUserInfo();
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
@@ -185,9 +189,9 @@ User *createAccount()
 
 bool runUserMenu(User *currentUser)
 {
-	showUserInfo(currentUser);
-
 	showSeatStatus();
+
+	showUserInfo(currentUser);
 
 	std::cout << "Select an option.\n";
 	std::cout << "1. Update user info\n";
@@ -572,6 +576,86 @@ void cancelSeat(User *currentUser)
 	return;
 }
 
+bool runAdminMenu(Admin *currentAdmin)
+{
+	showSeatStatus();
+
+	showAdminInfo(currentAdmin);
+
+	std::cout << "Select an option.\n";
+	std::cout << "1. Update admin info\n";
+	std::cout << "2. View all user info\n";
+	std::cout << "3. \n";
+	std::cout << "4. \n";
+	std::cout << "5. \n";
+	std::cout << "6. \n";
+
+	int selection;
+	std::cout << ">> ";
+	std::cin >> selection;
+
+	if (!(1 <= selection && selection <= 6))
+	{
+		system("cls");
+
+		std::cout << "Selection must be between 1 and 6!\n\n";
+
+		return true;
+	}
+
+	// update admin info
+	if (selection == 1)
+	{
+		updateAdminInfo(currentAdmin);
+	}
+
+	// view all user info
+	else if (selection == 2)
+	{
+		showAllUserInfo();
+	}
+
+	return true;
+}
+
+void showAdminInfo(Admin *currentAdmin)
+{
+	std::cout << "ID: " << currentAdmin->getId() << "\n";
+	std::cout << "Password: " << currentAdmin->getPw() << "\n";
+	std::cout << "Name: " << currentAdmin->getName() << "\n";
+	std::cout << "Phone: " << currentAdmin->getPhone() << "\n";
+
+	return;
+}
+
+void updateAdminInfo(Admin *currentAdmin)
+{
+	std::string id, pw, name, phone;
+
+	std::cout << "ID: ";
+	std::cin >> id;
+	std::cout << "Password: ";
+	std::cin >> pw;
+	std::cout << "Name: ";
+	std::cin >> name;
+	std::cout << "Phone: ";
+	std::cin >> phone;
+
+	currentAdmin->updateAdminInfo(id, pw, name, phone);
+
+	return;
+}
+
+void showAllUserInfo()
+{
+	for (int i = 0; i < users.size(); ++i)
+	{
+		showUserInfo(users[i]);
+	}
+
+	return;
+}
+
 std::string truncateToLengthEleven(std::string str)
 {
 	if (str.length() <= 11)
@@ -646,14 +730,13 @@ int main()
 		// user sign in
 		else if (currentUser != nullptr && currentAdmin == nullptr)
 		{
-			std::cout << "User sign in!\n"; // TODO: remove
-			runUserMenu(currentUser);
+			runUserMenu(currentUser); // TODO: loop
 		}
 		
 		// admin sign in
 		else if (currentUser == nullptr && currentAdmin != nullptr)
 		{
-			std::cout << "Admin sign in!\n"; // TODO: remove
+			runAdminMenu(currentAdmin); // TODO: loop
 		}
 	}
 
