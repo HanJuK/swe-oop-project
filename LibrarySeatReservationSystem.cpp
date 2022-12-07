@@ -18,12 +18,12 @@ Admin *signInAsAdmin();
 User *createAccount();
 bool runUserMenu(User *currentUser);
 void showUserInfo(User *currentUser);
-void reserveSeat(User *currentUser, int seatNo);
 Seat *getSeatBySeatNo(int seatNo);
 void showSeatStatus();
 User *getUserByPhone(std::string phone);
 void updateUserInfo(User *currentUser);
-
+void reserveSeat(User *currentUser, int seatNo);
+void cancelSeat(User *currentUser);
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
@@ -31,8 +31,6 @@ void deleteAllObjectsBeforeExit();
 
 void initializeWithSampleData()
 {
-	// TODO: set default seat reservation time
-
 	// initialize seats
 	for (int i = 1; i <= 98; ++i) // TODO: change to 100 seats
 	{
@@ -195,7 +193,7 @@ bool runUserMenu(User *currentUser)
 	std::cout << "1. Update user info\n";
 	std::cout << "2. Reserve seat\n";
 	std::cout << "3. Extend seat\n";
-	std::cout << "4. \n";
+	std::cout << "4. Cancel seat\n";
 
 	int selection;
 	std::cout << ">> ";
@@ -228,6 +226,12 @@ bool runUserMenu(User *currentUser)
 		currentUser->extendSeat(getSeatBySeatNo(currentUser->getSeatNo()), DEF_RES_TIME);
 	}
 
+	// cancel seat
+	else if (selection == 4)
+	{
+		cancelSeat(currentUser);
+	}
+
 	return true;
 }
 
@@ -245,7 +249,7 @@ void showUserInfo(User *currentUser)
 	{
 		std::cout << "Seat No.: " << "null\n";
 	}
-	else // TODO: test this
+	else
 	{
 		std::cout << "Seat No.: " << currentUser->getSeatNo()
 			<< " (" << currentSeat->getTimeRemainingInMinutes() << ")\n";
@@ -488,6 +492,22 @@ void reserveSeat(User *currentUser, int seatNo)
 
 	getSeatBySeatNo(currentUser->getSeatNo())->setCurrentSeatUser(currentUser->getPhone());
 	getSeatBySeatNo(currentUser->getSeatNo())->extendSeatTimeRemaining(1 + DEF_RES_TIME);
+
+	return;
+}
+
+void cancelSeat(User *currentUser)
+{
+	if (currentUser->getSeatNo() == -1)
+	{
+		std::cout << "No seat reserved for this user!\n";
+
+		return;
+	}
+
+	getSeatBySeatNo(currentUser->getSeatNo())->clearCurrentSeatUser();
+
+	currentUser->cancelSeat();
 
 	return;
 }

@@ -67,15 +67,13 @@ public:
 
 	void cancelSeat()
 	{
-		if (seatNo == -1)
+		if (this->seatNo == -1)
 		{
 			std::cout << "No seat reserved for this user!\n";
 		}
 		else
 		{
 			this->seatNo = -1;
-
-			// TODO: logic
 		}
 
 		return;

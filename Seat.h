@@ -34,6 +34,7 @@ public:
 	void clearCurrentSeatUser()
 	{
 		this->currentSeatUserPhone = "-1";
+		this->timeRemainingInMinutes = -1;
 
 		return;
 	}
