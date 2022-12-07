@@ -5,6 +5,8 @@
 #include <vector>
 #include <stdlib.h>
 
+int DEF_RES_TIME = 60;
+
 std::vector<User *> users;
 std::vector<Admin *> admins;
 std::vector<Seat *> seats;
@@ -16,10 +18,12 @@ Admin *signInAsAdmin();
 User *createAccount();
 bool runUserMenu(User *currentUser);
 void showUserInfo(User *currentUser);
+void reserveSeat(User *currentUser, int seatNo);
 Seat *getSeatBySeatNo(int seatNo);
 void showSeatStatus();
 User *getUserByPhone(std::string phone);
 void updateUserInfo(User *currentUser);
+
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
@@ -45,15 +49,10 @@ void initializeWithSampleData()
 	users.push_back(new User("id4", "pw4", "Choi", "01044444444"));
 	users.push_back(new User("id5", "pw5", "Jang", "01055555555"));
 
-	// TODO: sample seat reservation for users
-	// temp
-	seats[3]->setCurrentSeatUser("01011111111");
-	seats[3]->extendSeatTimeRemaining(60 + 1);
-	seats[46]->setCurrentSeatUser("01022222222");
-	seats[46]->extendSeatTimeRemaining(60 + 1);
-	seats[93]->setCurrentSeatUser("01033333333");
-	seats[93]->extendSeatTimeRemaining(60 + 1);
-	// temp
+	// sample seat reservation for users
+	reserveSeat(users[0], 3);
+	reserveSeat(users[1], 46);
+	reserveSeat(users[2], 93);
 
 	return;
 }
@@ -194,7 +193,7 @@ bool runUserMenu(User *currentUser)
 
 	std::cout << "Select an option.\n";
 	std::cout << "1. Update user info\n";
-	std::cout << "2. \n";
+	std::cout << "2. Reserve seat\n";
 	std::cout << "3. \n";
 	std::cout << "4. \n";
 
@@ -207,11 +206,20 @@ bool runUserMenu(User *currentUser)
 		system("cls");
 
 		std::cout << "Selection must be between 1 and 4!\n\n";
+
+		return true;
 	}
 
+	// update user info
 	if (selection == 1)
 	{
 		updateUserInfo(currentUser);
+	}
+
+	// reserve seat
+	else if (selection == 2)
+	{
+		reserveSeat(currentUser, -1);
 	}
 
 	return true;
@@ -424,6 +432,19 @@ void showSeatStatus()
 	return;
 }
 
+User *getUserByPhone(std::string phone)
+{
+	for (int i = 0; i < users.size(); ++i)
+	{
+		if (users[i]->getPhone() == phone)
+		{
+			return users[i];
+		}
+	}
+
+	return nullptr;
+}
+
 void updateUserInfo(User *currentUser)
 {
 	std::string id, pw, name, phone;
@@ -442,17 +463,27 @@ void updateUserInfo(User *currentUser)
 	return;
 }
 
-User *getUserByPhone(std::string phone)
+void reserveSeat(User *currentUser, int seatNo)
 {
-	for (int i = 0; i < users.size(); ++i)
+	if (seatNo == -1)
 	{
-		if (users[i]->getPhone() == phone)
-		{
-			return users[i];
-		}
+		std::cout << "Enter seat no.: ";
+		std::cin >> seatNo;
 	}
 
-	return nullptr;
+	if (getSeatBySeatNo(seatNo) == nullptr)
+	{
+		std::cout << "No such seat!\n";
+		
+		return; // TODO: loop
+	}
+
+	currentUser->reserveSeat(seatNo);
+
+	getSeatBySeatNo(currentUser->getSeatNo())->setCurrentSeatUser(currentUser->getPhone());
+	getSeatBySeatNo(currentUser->getSeatNo())->extendSeatTimeRemaining(1 + DEF_RES_TIME);
+
+	return;
 }
 
 std::string truncateToLengthEleven(std::string str)

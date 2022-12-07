@@ -35,11 +35,9 @@ public:
 
 	void reserveSeat(int seatNo)
 	{
-		if (seatNo == -1)
+		if (this->seatNo == -1)
 		{
 			this->seatNo = seatNo;
-
-			// TODO: logic
 		}
 		else
 		{
