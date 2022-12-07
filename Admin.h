@@ -114,9 +114,16 @@ public:
 		return;
 	}
 
-	void makeSeatTemporaryUnavailable(int seatNo)
+	void makeSeatTemporaryUnavailable(Seat *seat)
 	{
-		// TODO: logic
+		seat->changeIsTemoprarilyUnavailable(true);
+
+		return;
+	}
+
+	void makeSeatAvailable(Seat *seat)
+	{
+		seat->changeIsTemoprarilyUnavailable(false);
 
 		return;
 	}

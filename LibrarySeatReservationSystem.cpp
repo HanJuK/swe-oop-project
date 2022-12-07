@@ -29,6 +29,8 @@ void showAdminInfo(Admin *currentAdmin);
 void updateAdminInfo(Admin *currentAdmin);
 void blockUser(Admin *currentAdmin);
 void unblockUser(Admin *currentAdmin);
+void makeSeatTemporarilyUnavailable(Admin *currentAdmin);
+void makeSeatAvailable(Admin *currentAdmin);
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
@@ -337,7 +339,7 @@ void showSeatStatus()
 			{
 				std::cout << "¦¢ "
 					<< addPaddingToLengthEleven(std::to_string(seats[i * 10 + j]->getSeatNo())
-												+ " (unavailable)")
+												+ " (X)")
 					<< " ¦¢";
 			}
 			else
@@ -428,7 +430,7 @@ void showSeatStatus()
 			{
 				std::cout << "¦¢ "
 					<< addPaddingToLengthEleven(std::to_string(seats[(seats.size() / 10) * 10 + j]->getSeatNo())
-												+ " (unavailable)")
+												+ " (X)")
 					<< " ¦¢";
 			}
 			else
@@ -604,17 +606,19 @@ bool runAdminMenu(Admin *currentAdmin)
 	std::cout << "3. Block user\n";
 	std::cout << "4. Unblock user\n";
 	std::cout << "5. Add seat\n";
-	std::cout << "6. \n";
+	std::cout << "6. Remove seat\n";
+	std::cout << "7. Make seat temporarily unavailable\n";
+	std::cout << "8. Make seat available\n";
 
 	int selection;
 	std::cout << ">> ";
 	std::cin >> selection;
 
-	if (!(1 <= selection && selection <= 6))
+	if (!(1 <= selection && selection <= 8))
 	{
 		system("cls");
 
-		std::cout << "Selection must be between 1 and 6!\n\n";
+		std::cout << "Selection must be between 1 and 8!\n\n";
 
 		return true;
 	}
@@ -653,6 +657,18 @@ bool runAdminMenu(Admin *currentAdmin)
 	else if (selection == 6)
 	{
 		currentAdmin->removeSeat(&seats);
+	}
+
+	// make seat temporarily unavailable
+	else if (selection == 7)
+	{
+		makeSeatTemporarilyUnavailable(currentAdmin);
+	}
+
+	// make seat available
+	else if (selection == 8)
+	{
+		makeSeatAvailable(currentAdmin);
 	}
 
 	return true;
@@ -706,6 +722,48 @@ void unblockUser(Admin *currentAdmin)
 	std::cin >> phone;
 
 	currentAdmin->unblockUser(phone, getUserByPhone);
+
+	return;
+}
+
+void makeSeatTemporarilyUnavailable(Admin *currentAdmin)
+{
+	int seatNo;
+
+	std::cout << "Enter seat no.: ";
+	std::cin >> seatNo;
+
+	if (getSeatBySeatNo(seatNo) == nullptr)
+	{
+		std::cout << "No such seat!\n";
+	}
+	else if (getSeatBySeatNo(seatNo)->getTimeRemainingInMinutes() != -1)
+	{
+		std::cout << "Cannot make seat temporarily unavailable! (currently occupied)!\n";
+	}
+	else
+	{
+		currentAdmin->makeSeatTemporaryUnavailable(getSeatBySeatNo(seatNo));
+	}
+
+	return;
+}
+
+void makeSeatAvailable(Admin *currentAdmin)
+{
+	int seatNo;
+
+	std::cout << "Enter seat no.: ";
+	std::cin >> seatNo;
+
+	if (getSeatBySeatNo(seatNo) == nullptr)
+	{
+		std::cout << "No such seat!\n";
+	}
+	else
+	{
+		currentAdmin->makeSeatAvailable(getSeatBySeatNo(seatNo));
+	}
 
 	return;
 }
