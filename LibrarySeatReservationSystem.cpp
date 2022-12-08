@@ -35,7 +35,6 @@ void changeDefaultReservationTime(Admin *currentAdmin);
 std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
-// TODO: pts
 
 void initializeWithSampleData()
 {
@@ -104,6 +103,10 @@ bool runMainMenu(User **currentUser, Admin **currentAdmin)
 			system("cls");
 
 			std::cout << "This account has been blocked!\n\n";
+		}
+		else // sign in successful
+		{
+			system("cls");
 		}
 	}
 
@@ -290,20 +293,41 @@ void showUserInfo(User *currentUser)
 
 	currentSeat = getSeatBySeatNo(currentUser->getSeatNo());
 
-	std::cout << "ID: " << currentUser->getId() << "\n";
-	std::cout << "Password: " << currentUser->getPw() << "\n";
-	std::cout << "Name: " << currentUser->getName() << "\n";
-	std::cout << "Phone: " << currentUser->getPhone() << "\n";
+	std::cout << " ";
+	for (int i = 0; i < 148; ++i)
+	{
+		std::cout << "¦¡";
+	}
+	std::cout << "\n\n  ";
+
+	std::cout << "ID: " << currentUser->getId() << "       ";
+	std::cout << "Password: " << currentUser->getPw() << "       ";
+	std::cout << "Name: " << currentUser->getName() << "       ";
+	std::cout << "Phone: " << currentUser->getPhone() << "       ";
 	if (currentSeat == nullptr)
 	{
-		std::cout << "Seat No.: " << "null\n";
+		std::cout << "Seat No.: " << "null       ";
 	}
 	else
 	{
 		std::cout << "Seat No.: " << currentUser->getSeatNo()
-			<< " (" << currentSeat->getTimeRemainingInMinutes() << ")\n";
+			<< " (" << currentSeat->getTimeRemainingInMinutes() << " min.)       ";
 	}
 	std::cout << "Is Blocked?: " << currentUser->getIsBlocked() << "\n";
+
+	std::cout << "\n ";
+	for (int i = 0; i < 148; ++i)
+	{
+		std::cout << "¦¡";
+	}
+	std::cout << "\n";
+
+	std::cout << "\n";
+	for (int i = 0; i < 70; ++i) // nice
+	{
+		std::cout << " ";
+	}
+	std::cout << "<User Info>\n\n\n";
 
 	return;
 }
@@ -508,6 +532,13 @@ void showSeatStatus()
 		std::cout << "\n";
 	}
 
+	std::cout << "\n";
+	for (int i = 0; i < 69; ++i) // nice
+	{
+		std::cout << " ";
+	}
+	std::cout << "<Seat Status>\n\n\n";
+
 	return;
 }
 
@@ -538,6 +569,11 @@ void updateUserInfo(User *currentUser)
 	std::cin >> phone;
 
 	currentUser->updateUserInfo(id, pw, name, phone);
+
+	if (currentUser->getSeatNo() != -1)
+	{
+		getSeatBySeatNo(currentUser->getSeatNo())->setCurrentSeatUser(currentUser->getPhone());
+	}
 
 	return;
 }
@@ -843,8 +879,6 @@ std::string addPaddingToLengthEleven(std::string str)
 	return str;
 }
 
-// TODO:
-
 void deleteAllObjectsBeforeExit()
 {
 	// delete users
@@ -895,7 +929,7 @@ int main()
 		// user sign in
 		else if (currentUser != nullptr && currentAdmin == nullptr)
 		{
-			runUserMenu(currentUser); // TODO: loop
+			while (runUserMenu(currentUser)) {}
 		}
 		
 		// admin sign in
