@@ -52,7 +52,7 @@ public:
 		{
 			currentSeat->extendSeatTimeRemaining(minutes);
 			
-			std::cout << "Seat time has been extended by " << minutes << " minutes.\n";
+			std::cout << "Seat time extended by " << minutes << " minutes.\n";
 		}
 
 		return;
@@ -60,14 +60,11 @@ public:
 
 	void cancelSeat()
 	{
-		if (this->seatNo == -1)
-		{
-			std::cout << "No seat reserved for this user!\n";
-		}
-		else
-		{
-			this->seatNo = -1;
-		}
+		int seatNo = this->seatNo;
+
+		this->seatNo = -1;
+
+		std::cout << "Seat no." << seatNo << " canceled!\n";
 
 		return;
 	}

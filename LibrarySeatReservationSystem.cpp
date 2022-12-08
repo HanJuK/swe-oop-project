@@ -224,7 +224,7 @@ bool runUserMenu(User *currentUser)
 	{
 		system("cls");
 
-		std::cout << "Selection must be between 1 and 6!\n\n";
+		std::cout << "Selection must be between 1 and 6!\n";
 
 		return true;
 	}
@@ -232,36 +232,63 @@ bool runUserMenu(User *currentUser)
 	// update user info
 	if (selection == 1)
 	{
+		system("cls");
+
 		updateUserInfo(currentUser);
+
+		system("cls");
+
+		std::cout << "User info updated!\n";
 	}
 
 	// reserve seat
 	else if (selection == 2)
 	{
-		reserveSeat(currentUser, -1);
+		system("cls");
+
+		if (currentUser->getSeatNo() != -1)
+		{
+			std::cout << "Seat already reserved for this user!\n";
+		}
+		else
+		{
+			reserveSeat(currentUser, -1);
+
+			system("cls");
+
+			std::cout << "Seat no." << currentUser->getSeatNo() << " reserved!\n";
+		}
 	}
 
 	// extend seat
 	else if (selection == 3)
 	{
+		system("cls");
+
 		currentUser->extendSeat(getSeatBySeatNo(currentUser->getSeatNo()), DEF_RES_TIME);
 	}
 
 	// cancel seat
 	else if (selection == 4)
 	{
+		system("cls");
+
 		cancelSeat(currentUser);
 	}
 
 	// sign out
 	else if (selection == 5)
 	{
+		system("cls");
+
 		return false;
 	}
 
 	// delete account
 	else if (selection == 6)
 	{
+		system("cls");
+
 		if (currentUser->getSeatNo() != -1)
 		{
 			std::cout << "Please cancel your seat first.\n";
@@ -323,7 +350,7 @@ void showUserInfo(User *currentUser)
 	std::cout << "\n";
 
 	std::cout << "\n";
-	for (int i = 0; i < 70; ++i) // nice
+	for (int i = 0; i < 70; ++i)
 	{
 		std::cout << " ";
 	}
@@ -347,6 +374,8 @@ Seat *getSeatBySeatNo(int seatNo)
 
 void showSeatStatus()
 {
+	std::cout << "\n";
+
 	// for each row...
 	for (int i = 0; i < seats.size() / 10; ++i)
 	{
@@ -580,38 +609,36 @@ void updateUserInfo(User *currentUser)
 
 void reserveSeat(User *currentUser, int seatNo)
 {
-	if (currentUser->getSeatNo() != -1)
+	while (true)
 	{
-		std::cout << "Seat already reserved for this user!\n";
+		if (seatNo != -1)
+		{
+			break;
+		}
 
-		return;
-	}
-
-	if (seatNo == -1)
-	{
 		std::cout << "Enter seat no.: ";
 		std::cin >> seatNo;
-	}
 
-	if (getSeatBySeatNo(seatNo) == nullptr)
-	{
-		std::cout << "No such seat!\n";
-		
-		return; // TODO: loop
-	}
+		if (getSeatBySeatNo(seatNo) == nullptr)
+		{
+			std::cout << "No such seat!\n";
 
-	if (getSeatBySeatNo(seatNo)->getIsTemporaryUnavailable() == true)
-	{
-		std::cout << "This seat is temporary unavailable!\n";
+			seatNo = -1;
+		}
 
-		return; // TODO: loop
-	}
+		else if (getSeatBySeatNo(seatNo)->getIsTemporaryUnavailable() == true)
+		{
+			std::cout << "This seat is temporary unavailable!\n";
 
-	if (getSeatBySeatNo(seatNo)->getTimeRemainingInMinutes() != -1)
-	{
-		std::cout << "This seat is already taken!\n";
+			seatNo = -1;
+		}
 
-		return; // TODO: loop
+		else if (getSeatBySeatNo(seatNo)->getTimeRemainingInMinutes() != -1)
+		{
+			std::cout << "This seat is already taken!\n";
+
+			seatNo = -1;
+		}
 	}
 
 	currentUser->reserveSeat(seatNo);
@@ -753,10 +780,31 @@ bool runAdminMenu(Admin *currentAdmin)
 
 void showAdminInfo(Admin *currentAdmin)
 {
-	std::cout << "ID: " << currentAdmin->getId() << "\n";
-	std::cout << "Password: " << currentAdmin->getPw() << "\n";
-	std::cout << "Name: " << currentAdmin->getName() << "\n";
+	std::cout << " ";
+	for (int i = 0; i < 148; ++i)
+	{
+		std::cout << "¦¡";
+	}
+	std::cout << "\n\n  ";
+
+	std::cout << "ID: " << currentAdmin->getId() << "       ";
+	std::cout << "Password: " << currentAdmin->getPw() << "       ";
+	std::cout << "Name: " << currentAdmin->getName() << "       ";
 	std::cout << "Phone: " << currentAdmin->getPhone() << "\n";
+
+	std::cout << "\n ";
+	for (int i = 0; i < 148; ++i)
+	{
+		std::cout << "¦¡";
+	}
+	std::cout << "\n";
+
+	std::cout << "\n";
+	for (int i = 0; i < 69; ++i)
+	{
+		std::cout << " ";
+	}
+	std::cout << "<Admin Info>\n\n\n";
 
 	return;
 }
