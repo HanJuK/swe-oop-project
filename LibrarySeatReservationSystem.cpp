@@ -54,7 +54,22 @@ VOID CALLBACK TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 		//printf("Timer routine called. Parameter is %d.\n", *(int*)lpParam);
 		if(TimerOrWaitFired)
 		{
-			printf("A minute has passed!\n");
+			printf("\n忙式式式式式式式式式式式式式式式式式式式式式式忖\n");
+			printf("弛 A minute has passed! 弛\n");
+			printf("戌式式式式式式式式式式式式式式式式式式式式式式戎\n");
+
+			for (int i = 0; i < seats.size(); ++i)
+			{
+				if (seats[i]->getTimeRemainingInMinutes() != -1)
+				{
+					seats[i]->decrementSeatTimeRemaining();
+
+					if (seats[i]->getTimeRemainingInMinutes() == -1)
+					{
+						cancelSeat(getUserByPhone(seats[i]->getCurrentSeatUserPhone()));
+					}
+				}
+			}
 		}
 		else
 		{
