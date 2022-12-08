@@ -52,6 +52,8 @@ public:
 
 		if (userToBlock == nullptr)
 		{
+			system("cls");
+
 			std::cout << "No such user!\n";
 		}
 		else
@@ -66,6 +68,10 @@ public:
 
 			// then, block them
 			userToBlock->setIsBlocked(true);
+
+			system("cls");
+
+			std::cout << "User " << userToBlock->getName() << " blocked!\n";
 		}
 
 		return;
@@ -79,11 +85,17 @@ public:
 
 		if (userToUnblock == nullptr)
 		{
+			system("cls");
+
 			std::cout << "No such user!\n";
 		}
 		else
 		{
 			userToUnblock->setIsBlocked(false);
+
+			system("cls");
+
+			std::cout << "User " << userToUnblock->getName() << " unblocked!\n";
 		}
 
 		return;
@@ -93,6 +105,10 @@ public:
 	{
 		(*seats).push_back(new Seat((*seats).size() + 1));
 
+		system("cls");
+
+		std::cout << "Seat added!\n";
+
 		return;
 	}
 
@@ -100,6 +116,8 @@ public:
 	{
 		if ((*((*seats).end() - 1))->getTimeRemainingInMinutes() != -1)
 		{
+			system("cls");
+
 			std::cout << "Cannot remove seat! (currently occupied)\n";
 		}
 		else
@@ -109,6 +127,10 @@ public:
 			(*seats).pop_back();
 
 			delete temp;
+
+			system("cls");
+
+			std::cout << "Seat removed!\n";
 		}
 
 		return;

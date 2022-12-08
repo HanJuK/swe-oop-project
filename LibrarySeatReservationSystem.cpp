@@ -4,6 +4,10 @@
 
 #include <vector>
 #include <stdlib.h>
+#include <windows.h>
+#include <stdio.h>
+
+HANDLE gDoneEvent;
 
 int DEF_RES_TIME = 60;
 
@@ -11,6 +15,7 @@ std::vector<User *> users;
 std::vector<Admin *> admins;
 std::vector<Seat *> seats;
 
+VOID CALLBACK TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired);
 void initializeWithSampleData();
 bool runMainMenu(User **currentUser, Admin **currentAdmin);
 User *signIn();
@@ -36,10 +41,34 @@ std::string truncateToLengthEleven(std::string str);
 std::string addPaddingToLengthEleven(std::string str);
 void deleteAllObjectsBeforeExit();
 
+VOID CALLBACK TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired)
+{
+	if (lpParam == NULL)
+	{
+		printf("TimerRoutine lpParam is NULL\n");
+	}
+	else
+	{
+		// lpParam points to the argument; in this case it is an int
+
+		//printf("Timer routine called. Parameter is %d.\n", *(int*)lpParam);
+		if(TimerOrWaitFired)
+		{
+			printf("A minute has passed!\n");
+		}
+		else
+		{
+			printf("The wait event was signaled.\n");
+		}
+	}
+
+	SetEvent(gDoneEvent);
+}
+
 void initializeWithSampleData()
 {
 	// initialize seats
-	for (int i = 1; i <= 98; ++i) // TODO: change to 100 seats
+	for (int i = 1; i <= 100; ++i)
 	{
 		seats.push_back(new Seat(i));
 	}
@@ -122,6 +151,10 @@ bool runMainMenu(User **currentUser, Admin **currentAdmin)
 			system("cls");
 
 			std::cout << "Sign in failed!\n\n";
+		}
+		else // sign in successful
+		{
+			system("cls");
 		}
 	}
 
@@ -700,66 +733,92 @@ bool runAdminMenu(Admin *currentAdmin)
 	// update admin info
 	if (selection == 1)
 	{
+		system("cls");
+
 		updateAdminInfo(currentAdmin);
+
+		system("cls");
+
+		std::cout << "Admin info updated!\n";
 	}
 
 	// view all user info
 	else if (selection == 2)
 	{
+		system("cls");
+
 		currentAdmin->viewAllUserInfo(&users, showUserInfo);
 	}
 
 	// block user
 	else if (selection == 3)
 	{
+		system("cls");
+
 		blockUser(currentAdmin);
 	}
 
 	// unblock user
 	else if (selection == 4)
 	{
+		system("cls");
+
 		unblockUser(currentAdmin);
 	}
 
 	// add seat
 	else if (selection == 5)
 	{
+		system("cls");
+
 		currentAdmin->addSeat(&seats);
 	}
 
 	// remove seat
 	else if (selection == 6)
 	{
+		system("cls");
+
 		currentAdmin->removeSeat(&seats);
 	}
 
 	// make seat temporarily unavailable
 	else if (selection == 7)
 	{
+		system("cls");
+
 		makeSeatTemporarilyUnavailable(currentAdmin);
 	}
 
 	// make seat available
 	else if (selection == 8)
 	{
+		system("cls");
+
 		makeSeatAvailable(currentAdmin);
 	}
 
 	// change default reservation time
 	else if (selection == 9)
 	{
+		system("cls");
+
 		changeDefaultReservationTime(currentAdmin);
 	}
 
 	// sign out
 	else if (selection == 10)
 	{
+		system("cls");
+
 		return false;
 	}
 
 	// delete account
 	else if (selection == 11)
 	{
+		system("cls");
+
 		for (int i = 0; i < admins.size(); ++i)
 		{
 			if (admins[i] == currentAdmin)
@@ -860,15 +919,23 @@ void makeSeatTemporarilyUnavailable(Admin *currentAdmin)
 
 	if (getSeatBySeatNo(seatNo) == nullptr)
 	{
+		system("cls");
+
 		std::cout << "No such seat!\n";
 	}
 	else if (getSeatBySeatNo(seatNo)->getTimeRemainingInMinutes() != -1)
 	{
+		system("cls");
+
 		std::cout << "Cannot make seat temporarily unavailable! (currently occupied)!\n";
 	}
 	else
 	{
 		currentAdmin->makeSeatTemporaryUnavailable(getSeatBySeatNo(seatNo));
+
+		system("cls");
+
+		std::cout << "Made seat no." << seatNo << " temporary unavailable!\n";
 	}
 
 	return;
@@ -883,11 +950,17 @@ void makeSeatAvailable(Admin *currentAdmin)
 
 	if (getSeatBySeatNo(seatNo) == nullptr)
 	{
+		system("cls");
+
 		std::cout << "No such seat!\n";
 	}
 	else
 	{
 		currentAdmin->makeSeatAvailable(getSeatBySeatNo(seatNo));
+
+		system("cls");
+
+		std::cout << "Made seat no." << seatNo << " available!\n";
 	}
 
 	return;
@@ -901,6 +974,10 @@ void changeDefaultReservationTime(Admin *currentAdmin)
 	std::cin >> minutes;
 
 	currentAdmin->changeDefaultReservationTime(&DEF_RES_TIME, minutes);
+
+	system("cls");
+
+	std::cout << "Default reservation time changed to " << DEF_RES_TIME << " minutes!\n";
 
 	return;
 }
@@ -952,7 +1029,33 @@ void deleteAllObjectsBeforeExit()
 
 int main()
 {
-	// TODO: signal setup for alarm
+	HANDLE hTimer = NULL;
+	HANDLE hTimerQueue = NULL;
+	int arg = 123;
+
+	// Use an event object to track the TimerRoutine execution
+	gDoneEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (NULL == gDoneEvent)
+	{
+		printf("CreateEvent failed (%d)\n", GetLastError());
+		return 1;
+	}
+
+	// Create the timer queue.
+	hTimerQueue = CreateTimerQueue();
+	if (NULL == hTimerQueue)
+	{
+		printf("CreateTimerQueue failed (%d)\n", GetLastError());
+		return 2;
+	}
+
+	// Set a timer to call the timer routine in 10 seconds.
+	if (!CreateTimerQueueTimer( &hTimer, hTimerQueue, 
+							   (WAITORTIMERCALLBACK)TimerRoutine, &arg , 10000, 10000, 0))
+	{
+		printf("CreateTimerQueueTimer failed (%d)\n", GetLastError());
+		return 3;
+	}
 
 	initializeWithSampleData();
 
@@ -983,11 +1086,23 @@ int main()
 		// admin sign in
 		else if (currentUser == nullptr && currentAdmin != nullptr)
 		{
-			runAdminMenu(currentAdmin); // TODO: loop
+			while (runAdminMenu(currentAdmin)) {}
 		}
 	}
 
 	deleteAllObjectsBeforeExit();
+
+	// Wait for the timer-queue thread to complete using an event 
+	// object. The thread will signal the event at that time.
+
+	if (WaitForSingleObject(gDoneEvent, INFINITE) != WAIT_OBJECT_0)
+		printf("WaitForSingleObject failed (%d)\n", GetLastError());
+
+	CloseHandle(gDoneEvent);
+
+	// Delete all timers in the timer queue.
+	if (!DeleteTimerQueue(hTimerQueue))
+		printf("DeleteTimerQueue failed (%d)\n", GetLastError());
 
 	return 0;
 }
