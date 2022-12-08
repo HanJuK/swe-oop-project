@@ -83,7 +83,7 @@ VOID CALLBACK TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 void initializeWithSampleData()
 {
 	// initialize seats
-	for (int i = 1; i <= 100; ++i)
+	for (int i = 1; i <= 30; ++i)
 	{
 		seats.push_back(new Seat(i));
 	}
@@ -99,9 +99,15 @@ void initializeWithSampleData()
 	users.push_back(new User("id5", "pw5", "Jang", "01055555555"));
 
 	// sample seat reservation for users
+	DEF_RES_TIME = 63;
 	reserveSeat(users[0], 3);
-	reserveSeat(users[1], 46);
-	reserveSeat(users[2], 93);
+	DEF_RES_TIME = 24;
+	reserveSeat(users[1], 12);
+	DEF_RES_TIME = 125;
+	reserveSeat(users[2], 25);
+
+	// reset DEF_RES_TIME;
+	DEF_RES_TIME = 60;
 
 	return;
 }
