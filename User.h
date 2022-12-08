@@ -37,14 +37,7 @@ public:
 
 	void reserveSeat(int seatNo)
 	{
-		if (this->seatNo == -1)
-		{
-			this->seatNo = seatNo;
-		}
-		else
-		{
-			std::cout << "Seat already reserved for this user!\n";
-		}
+		this->seatNo = seatNo;
 
 		return;
 	}

@@ -544,6 +544,13 @@ void updateUserInfo(User *currentUser)
 
 void reserveSeat(User *currentUser, int seatNo)
 {
+	if (currentUser->getSeatNo() != -1)
+	{
+		std::cout << "Seat already reserved for this user!\n";
+
+		return;
+	}
+
 	if (seatNo == -1)
 	{
 		std::cout << "Enter seat no.: ";
