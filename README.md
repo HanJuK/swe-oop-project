@@ -1,5 +1,6 @@
 # Software Engineering OOP Project
-A repository for school's Software Engineering course. (Fall 2022)
+A repository for school's Software Engineering course. (Fall 2022)</br>
+This project is a "Library Seat Reservation System" software engineering OOP project.
 
 This project consists of:
 - Requirement analysis
